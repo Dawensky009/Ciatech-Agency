@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, Zap, BarChart, Users, ArrowRight, Github, Twitter, 
-  Linkedin, Mail, Check, MessageSquare, Globe, Cpu, ChevronDown 
+  Linkedin, Mail, Check, MessageSquare, Globe, Cpu, ChevronDown,
+  ExternalLink, Code, Layout, ArrowUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,7 +16,7 @@ const Navbar = () => (
       CIATECH<span className="text-gold-500">.</span>
     </motion.div>
     <div className="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-400">
-      {['services', 'pricing', 'team', 'faq', 'contact'].map((item) => (
+      {['services', 'projects', 'pricing', 'team', 'faq', 'contact'].map((item) => (
         <a key={item} href={`#${item}`} className="hover:text-white transition-colors">{item}</a>
       ))}
     </div>
@@ -109,6 +110,58 @@ const Services = () => {
               </div>
               <h4 className="text-xl font-bold text-white mb-4">{s.title}</h4>
               <p className="text-gray-400 font-light text-sm">{s.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Projects = () => {
+  const projects = [
+    { title: "Daky Vision Estate", category: "Real Estate SaaS", img: "https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+    { title: "Ciatech Agency Redesign", category: "Corporate Website", img: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=600" },
+    { title: "J-P-C Construction", category: "Infrastructure App", img: "https://images.pexels.com/photos/585418/pexels-photo-585418.jpeg?auto=compress&cs=tinysrgb&w=600" },
+    { title: "Fintech Pulse", category: "Bank Dashboard", img: "https://images.pexels.com/photos/187041/pexels-photo-187041.jpeg?auto=compress&cs=tinysrgb&w=600" }
+  ];
+
+  return (
+    <section id="projects" className="py-24 px-6 md:px-10 bg-navy-950">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+          <div>
+            <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">Portfolio</h2>
+            <h3 className="text-3xl md:text-5xl font-bold text-white leading-tight">Featured Projects.</h3>
+          </div>
+          <button className="mt-8 md:mt-0 text-white flex items-center hover:text-gold-500 transition-colors">
+            View all works <ArrowRight className="ml-2" size={18} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((p, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="group relative h-[400px] overflow-hidden rounded-[32px] border border-white/5"
+            >
+              <img src={p.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent opacity-90"></div>
+              <div className="absolute inset-0 p-10 flex flex-col justify-end">
+                <span className="text-gold-500 text-xs font-bold uppercase tracking-widest mb-2">{p.category}</span>
+                <h4 className="text-white text-3xl font-bold mb-6">{p.title}</h4>
+                <div className="flex space-x-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
+                  <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold-500 hover:text-black transition-all">
+                    <ExternalLink size={20} />
+                  </button>
+                  <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold-500 hover:text-black transition-all">
+                    <Code size={20} />
+                  </button>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -254,7 +307,7 @@ const Contact = () => (
         </div>
         
         <div className="lg:w-1/2 bg-white/5 p-8 rounded-3xl border border-white/5">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input type="text" placeholder="Full Name" className="bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none" />
               <input type="email" placeholder="Email Address" className="bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none" />
@@ -268,6 +321,34 @@ const Contact = () => (
     </div>
   </section>
 );
+
+const BackToTop = () => {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShow(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          onClick={scrollToTop}
+          className="fixed bottom-10 right-10 w-14 h-14 bg-gold-500 text-black rounded-full shadow-2xl flex items-center justify-center z-[100] hover:bg-white transition-all active:scale-95"
+        >
+          <ArrowUp size={24} />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const Footer = () => (
   <footer className="py-20 px-6 md:px-10 bg-navy-950 border-t border-white/5">
@@ -285,6 +366,7 @@ const Footer = () => (
             <h5 className="text-white font-bold mb-6">Navigation</h5>
             <ul className="space-y-4 text-gray-500 text-sm">
               <li><a href="#services" className="hover:text-gold-500 transition-colors">Services</a></li>
+              <li><a href="#projects" className="hover:text-gold-500 transition-colors">Projects</a></li>
               <li><a href="#pricing" className="hover:text-gold-500 transition-colors">Pricing</a></li>
               <li><a href="#team" className="hover:text-gold-500 transition-colors">Team</a></li>
             </ul>
@@ -316,18 +398,19 @@ const Footer = () => (
 
 function App() {
   return (
-    <div className="bg-navy-950 selection:bg-gold-500 selection:text-black">
+    <div className="bg-navy-950 selection:bg-gold-500 selection:text-black scroll-smooth">
       <Navbar />
       <Hero />
       <Services />
+      <Projects />
       <Pricing />
       <Team />
       <FAQ />
       <Contact />
       <Footer />
+      <BackToTop />
     </div>
   );
 }
 
 export default App;
-
