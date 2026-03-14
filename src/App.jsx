@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Zap, BarChart, Users, ArrowRight, Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Navbar = () => (
   <nav className="flex justify-between items-center py-6 px-10 bg-transparent absolute w-full z-10">
@@ -25,20 +26,35 @@ const Hero = () => (
     </div>
     
     <div className="relative z-10 text-center px-4 max-w-4xl">
-      <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-none">
+      <motion.h1 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-none"
+      >
         Elevating <span className="text-gold-500 italic">SaaS</span> Potential.
-      </h1>
-      <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+      </motion.h1>
+      <motion.p 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed"
+      >
         CIATECH builds high-performance, scalable software solutions for the next generation of digital giants. We turn complex data into intuitive experiences.
-      </p>
-      <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+      </motion.p>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="flex flex-col md:flex-row items-center justify-center gap-4"
+      >
         <button className="bg-white text-black font-bold py-4 px-10 rounded-full flex items-center group hover:bg-gold-500 transition-all">
           Explore Solutions <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
         </button>
         <button className="border border-white/20 hover:border-white/50 text-white font-bold py-4 px-10 rounded-full transition-all">
           View Portfolio
         </button>
-      </div>
+      </motion.div>
     </div>
   </section>
 );
