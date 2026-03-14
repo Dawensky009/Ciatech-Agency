@@ -1,396 +1,265 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Shield, Zap, BarChart, Users, ArrowRight, Github, Twitter, 
   Linkedin, Mail, Check, MessageSquare, Globe, Cpu, ChevronDown,
-  ExternalLink, Code, Layout, ArrowUp
+  ExternalLink, Code, Layout, ArrowUp, Plus, Minus, MoveRight
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 
-const Navbar = () => (
-  <nav className="flex justify-between items-center py-6 px-6 md:px-10 bg-transparent absolute w-full z-50">
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="text-2xl font-bold tracking-tighter text-white"
-    >
-      CIATECH<span className="text-gold-500">.</span>
-    </motion.div>
-    <div className="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-400">
-      {['services', 'projects', 'pricing', 'team', 'faq', 'contact'].map((item) => (
-        <a key={item} href={`#${item}`} className="hover:text-white transition-colors">{item}</a>
-      ))}
-    </div>
-    <motion.button 
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="bg-gold-500 hover:bg-gold-600 text-black font-bold py-2 px-6 rounded-full transition-all text-sm uppercase"
-    >
-      Get Started
-    </motion.button>
-  </nav>
-);
-
-const Hero = () => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy-950">
-    <div className="absolute inset-0 z-0">
-      <img 
-        src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-        className="w-full h-full object-cover opacity-20" 
-        alt="Background"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/50 via-navy-950 to-navy-950"></div>
-    </div>
-    
-    <div className="relative z-10 text-center px-4 max-w-5xl">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <h1 className="text-5xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-none">
-          Next Gen <span className="text-gold-500 italic">SaaS</span> <br /> Architecture.
-        </h1>
-        <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-          CIATECH engineers high-performance digital ecosystems. We combine Microsoft-certified precision with cutting-edge design to scale your vision.
-        </p>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-          <button className="bg-white text-black font-bold py-4 px-10 rounded-full flex items-center group hover:bg-gold-500 transition-all">
-            Start Building <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-          </button>
-          <button className="border border-white/20 hover:border-white/50 text-white font-bold py-4 px-10 rounded-full transition-all bg-white/5 backdrop-blur-sm">
-            Watch Demo
-          </button>
-        </div>
-      </motion.div>
-    </div>
-    
-    <motion.div 
-      animate={{ y: [0, 10, 0] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-500"
-    >
-      <ChevronDown size={32} />
-    </motion.div>
-  </section>
-);
-
-const Services = () => {
-  const services = [
-    { icon: <Zap size={32} />, title: "Custom SaaS", desc: "Bespoke software tailored to your specific business architecture." },
-    { icon: <Shield size={32} />, title: "Cyber Security", desc: "Advanced protection layers for your most critical data assets." },
-    { icon: <BarChart size={32} />, title: "Data Analytics", desc: "Turn raw data into actionable insights with AI-driven analysis." },
-    { icon: <Cpu size={32} />, title: "AI Integration", desc: "Embed intelligent automation into your existing workflows." }
-  ];
-
-  return (
-    <section id="services" className="py-24 px-6 md:px-10 bg-navy-950">
-      <div className="max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">Core Expertise</h2>
-          <h3 className="text-3xl md:text-5xl font-bold text-white max-w-2xl leading-tight">Elite solutions for ambitious ventures.</h3>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((s, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="p-8 border border-white/5 bg-white/5 hover:bg-white/10 transition-all rounded-3xl group cursor-default"
-            >
-              <div className="text-gold-500 mb-6 group-hover:scale-110 transition-transform inline-block">
-                {s.icon}
-              </div>
-              <h4 className="text-xl font-bold text-white mb-4">{s.title}</h4>
-              <p className="text-gray-400 font-light text-sm">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Projects = () => {
-  const projects = [
-    { title: "Daky Vision Estate", category: "Real Estate SaaS", img: "https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
-    { title: "Ciatech Agency Redesign", category: "Corporate Website", img: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "J-P-C Construction", category: "Infrastructure App", img: "https://images.pexels.com/photos/585418/pexels-photo-585418.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Fintech Pulse", category: "Bank Dashboard", img: "https://images.pexels.com/photos/187041/pexels-photo-187041.jpeg?auto=compress&cs=tinysrgb&w=600" }
-  ];
-
-  return (
-    <section id="projects" className="py-24 px-6 md:px-10 bg-navy-950">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
-          <div>
-            <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">Portfolio</h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-white leading-tight">Featured Projects.</h3>
-          </div>
-          <button className="mt-8 md:mt-0 text-white flex items-center hover:text-gold-500 transition-colors">
-            View all works <ArrowRight className="ml-2" size={18} />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((p, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="group relative h-[400px] overflow-hidden rounded-[32px] border border-white/5"
-            >
-              <img src={p.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.title} />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent opacity-90"></div>
-              <div className="absolute inset-0 p-10 flex flex-col justify-end">
-                <span className="text-gold-500 text-xs font-bold uppercase tracking-widest mb-2">{p.category}</span>
-                <h4 className="text-white text-3xl font-bold mb-6">{p.title}</h4>
-                <div className="flex space-x-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
-                  <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold-500 hover:text-black transition-all">
-                    <ExternalLink size={20} />
-                  </button>
-                  <button className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold-500 hover:text-black transition-all">
-                    <Code size={20} />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Pricing = () => {
-  const plans = [
-    { name: "Starter", price: "999", features: ["Single Platform", "Basic Analytics", "Community Support", "Standard Security"] },
-    { name: "Professional", price: "2499", features: ["Multi-Platform", "Advanced AI Insights", "24/7 Priority Support", "Enhanced Security"], popular: true },
-    { name: "Enterprise", price: "Custom", features: ["Full Ecosystem", "Custom AI Models", "Dedicated Architect", "Military-Grade Security"] }
-  ];
-
-  return (
-    <section id="pricing" className="py-24 px-6 md:px-10 bg-navy-950">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">Pricing</h2>
-          <h3 className="text-3xl md:text-5xl font-bold text-white">Scale Without Limits.</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((p, i) => (
-            <motion.div 
-              key={i}
-              whileHover={{ y: -10 }}
-              className={`p-10 rounded-3xl border ${p.popular ? 'border-gold-500 bg-gold-500/5' : 'border-white/5 bg-white/5'} flex flex-col`}
-            >
-              <h4 className="text-white text-xl font-bold mb-2">{p.name}</h4>
-              <div className="mb-8">
-                <span className="text-4xl font-bold text-white">{p.price === 'Custom' ? p.price : `$${p.price}`}</span>
-                {p.price !== 'Custom' && <span className="text-gray-500">/project</span>}
-              </div>
-              <ul className="space-y-4 mb-10 flex-grow">
-                {p.features.map((f, j) => (
-                  <li key={j} className="flex items-center text-gray-400 text-sm">
-                    <Check size={16} className="text-gold-500 mr-2" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <button className={`w-full py-4 rounded-full font-bold transition-all ${p.popular ? 'bg-gold-500 text-black' : 'bg-white/10 text-white hover:bg-white/20'}`}>
-                Choose {p.name}
-              </button>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Team = () => {
-  const members = [
-    { name: "Dawensky Thermildort", role: "Founder & Architect", img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { name: "Marcus Vane", role: "CTO", img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { name: "Elena Rossi", role: "Head of Design", img: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { name: "John Smith", role: "Security Lead", img: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600" }
-  ];
-
-  return (
-    <section id="team" className="py-24 px-6 md:px-10 bg-navy-950">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">The Staff</h2>
-          <h3 className="text-3xl md:text-5xl font-bold text-white">Minds behind the code.</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {members.map((m, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-3xl aspect-[4/5]"
-            >
-              <img src={m.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={m.name} />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent opacity-80"></div>
-              <div className="absolute bottom-0 left-0 p-6">
-                <p className="text-white font-bold text-lg">{m.name}</p>
-                <p className="text-gold-500 text-xs font-medium uppercase tracking-wider">{m.role}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const FAQ = () => {
-  const faqs = [
-    { q: "How long does a typical SaaS build take?", a: "Depending on complexity, a standard build takes 4-8 weeks from architecture to deployment." },
-    { q: "Do you offer post-launch support?", a: "Yes, we provide 24/7 technical maintenance and iterative updates for all our enterprise clients." },
-    { q: "Can you integrate AI into my existing app?", a: "Absolutely. We specialize in retrofitting intelligent automation into legacy systems." }
-  ];
-
-  return (
-    <section id="faq" className="py-24 px-6 md:px-10 bg-navy-950">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4 text-center">FAQ</h2>
-        <h3 className="text-3xl md:text-5xl font-bold text-white mb-12 text-center">Common Questions.</h3>
-        <div className="space-y-4">
-          {faqs.map((f, i) => (
-            <details key={i} className="group glass p-6 rounded-2xl border border-white/5 cursor-pointer">
-              <summary className="flex justify-between items-center text-white font-bold list-none">
-                {f.q} <ChevronDown className="group-open:rotate-180 transition-transform" />
-              </summary>
-              <p className="text-gray-400 mt-4 text-sm leading-relaxed">{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Contact = () => (
-  <section id="contact" className="py-24 px-6 md:px-10 bg-navy-950">
-    <div className="max-w-7xl mx-auto glass rounded-[40px] p-8 md:p-20 border border-white/5 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500/10 blur-[120px] rounded-full -mr-32 -mt-32"></div>
-      <div className="relative z-10 flex flex-col lg:flex-row gap-16">
-        <div className="lg:w-1/2">
-          <h2 className="text-gold-500 uppercase tracking-widest text-sm font-bold mb-4">Contact</h2>
-          <h3 className="text-4xl md:text-6xl font-bold text-white mb-8">Let's build <br /> the future.</h3>
-          <p className="text-gray-400 mb-10 text-lg">Have a project in mind? Our team of experts is ready to transform your ideas into reality.</p>
-          <div className="space-y-6">
-            <div className="flex items-center text-white group cursor-pointer">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mr-4 group-hover:bg-gold-500 group-hover:text-black transition-all">
-                <Mail size={20} />
-              </div>
-              <span>hello@ciatech.agency</span>
-            </div>
-            <div className="flex items-center text-white group cursor-pointer">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mr-4 group-hover:bg-gold-500 group-hover:text-black transition-all">
-                <Globe size={20} />
-              </div>
-              <span>Port-au-Prince, Haiti</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="lg:w-1/2 bg-white/5 p-8 rounded-3xl border border-white/5">
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <input type="text" placeholder="Full Name" className="bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none" />
-              <input type="email" placeholder="Email Address" className="bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none" />
-            </div>
-            <input type="text" placeholder="Subject" className="w-full bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none" />
-            <textarea placeholder="Your Message" rows="4" className="w-full bg-navy-950 border border-white/10 rounded-xl p-4 text-white focus:border-gold-500 outline-none"></textarea>
-            <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-gold-500 transition-all uppercase tracking-widest text-sm">Send Message</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
-const BackToTop = () => {
-  const [show, setShow] = useState(false);
+const CustomCursor = () => {
+  const dotRef = useRef(null);
+  const outlineRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => setShow(window.scrollY > 400);
+    const moveCursor = (e) => {
+      if (dotRef.current) {
+        dotRef.current.style.left = `${e.clientX}px`;
+        dotRef.current.style.top = `${e.clientY}px`;
+      }
+      if (outlineRef.current) {
+        outlineRef.current.style.left = `${e.clientX}px`;
+        outlineRef.current.style.top = `${e.clientY}px`;
+        outlineRef.current.style.transform = `translate(-50%, -50%)`;
+      }
+    };
+    window.addEventListener('mousemove', moveCursor);
+    return () => window.removeEventListener('mousemove', moveCursor);
+  }, []);
+
+  return (
+    <>
+      <div ref={dotRef} className="cursor-dot hidden lg:block" style={{ transform: 'translate(-50%, -50%)' }} />
+      <div ref={outlineRef} className="cursor-outline hidden lg:block" />
+    </>
+  );
+};
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          onClick={scrollToTop}
-          className="fixed bottom-10 right-10 w-14 h-14 bg-gold-500 text-black rounded-full shadow-2xl flex items-center justify-center z-[100] hover:bg-white transition-all active:scale-95"
+    <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'py-4 bg-navy-950/80 backdrop-blur-xl border-b border-white/5' : 'py-8 bg-transparent'}`}>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 flex justify-between items-center">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-2xl font-black tracking-tighter text-white"
         >
-          <ArrowUp size={24} />
-        </motion.button>
-      )}
-    </AnimatePresence>
+          CIATECH<span className="text-gold-500">_</span>
+        </motion.div>
+        
+        <div className="hidden lg:flex space-x-12 text-[10px] uppercase tracking-[0.3em] font-bold text-gray-500">
+          {['Expertise', 'Work', 'Pricing', 'Agency'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-gold-500 transition-colors relative group">
+              {item}
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold-500 transition-all group-hover:w-full"></span>
+            </a>
+          ))}
+        </div>
+
+        <button className="text-white text-[10px] font-bold uppercase tracking-widest px-6 py-3 border border-white/10 rounded-full hover:bg-white hover:text-black transition-all">
+          Start Project
+        </button>
+      </div>
+    </nav>
   );
 };
 
-const Footer = () => (
-  <footer className="py-20 px-6 md:px-10 bg-navy-950 border-t border-white/5">
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start mb-20">
-        <div className="mb-12 md:mb-0">
-          <div className="text-3xl font-bold tracking-tighter text-white mb-6">CIATECH<span className="text-gold-500">.</span></div>
-          <p className="text-gray-500 max-w-sm leading-relaxed">
-            Redefining the digital landscape through elite software engineering and Kind Man principles. Microsoft Certified Precision.
-          </p>
+const Hero = () => {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+
+  return (
+    <section className="relative min-h-screen flex items-center bg-navy-950 overflow-hidden pt-20">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* Left Side: Bold Typography */}
+        <div className="lg:col-span-7 z-10">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <h1 className="text-6xl md:text-[120px] font-black leading-[0.85] tracking-tighter text-white mb-8">
+              DIGITAL <br />
+              <span className="text-gold-500 italic">ARCHITECTS</span><br />
+              OF HAITI.
+            </h1>
+            <p className="text-gray-400 text-lg md:text-xl max-w-xl font-light leading-relaxed mb-10 border-l-2 border-gold-500/30 pl-6">
+              Nou pa jis bati sit web. Nou bati ekosistèm nimerik k ap pwoteje ak grandi biznis ou an 2026. Microsoft Precision. Kind Man Soul.
+            </p>
+            <div className="flex flex-wrap gap-6">
+              <button className="bg-gold-500 text-black font-black py-5 px-10 rounded-full flex items-center group overflow-hidden relative">
+                <span className="relative z-10">PRAN YON KONTAK</span>
+                <MoveRight className="ml-2 group-hover:translate-x-2 transition-transform relative z-10" />
+                <motion.div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></motion.div>
+              </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Immersive Visuals */}
+        <div className="lg:col-span-5 relative h-[500px] md:h-[700px]">
+          <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
+            <div className="w-full h-full rounded-[40px] overflow-hidden border border-white/5 rotate-3 scale-110">
+              <img 
+                src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                className="w-full h-full object-cover opacity-60"
+                alt="Architecture"
+              />
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            style={{ y: y2 }}
+            className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 glass-card p-8 rounded-3xl w-72 z-20"
+          >
+            <div className="text-gold-500 font-black text-4xl mb-2">99.9%</div>
+            <div className="text-white text-xs uppercase tracking-widest font-bold">System Reliability</div>
+            <div className="mt-4 h-[1px] bg-white/10 w-full"></div>
+            <div className="mt-4 flex -space-x-2">
+              {[1,2,3].map(i => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-navy-950 bg-gray-800 overflow-hidden">
+                   <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
+                </div>
+              ))}
+              <div className="w-8 h-8 rounded-full border-2 border-navy-950 bg-gold-500 flex items-center justify-center text-[8px] font-bold text-black">+24k</div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gold-500/5 blur-[150px] -mr-96 -mt-96 rounded-full"></div>
+    </section>
+  );
+};
+
+const Marquee = () => (
+  <div className="py-20 border-y border-white/5 bg-navy-950 overflow-hidden whitespace-nowrap">
+    <div className="animate-marquee">
+      {[...Array(10)].map((_, i) => (
+        <span key={i} className="text-7xl md:text-9xl font-black text-transparent stroke-white stroke-1 opacity-10 mx-10 uppercase tracking-tighter" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.1)' }}>
+          Ciatech Agency • Strategy • Code • Design •
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
+const BentoExpertise = () => {
+  const items = [
+    { size: 'col-span-1 lg:col-span-8', title: 'Custom SaaS Architecture', desc: 'Soti nan baz done Microsoft pou rive nan UI entèlijan.', icon: <Cpu />, color: 'bg-gold-500/10' },
+    { size: 'col-span-1 lg:col-span-4', title: 'Cyber Security', desc: 'Pwoteksyon elit.', icon: <Shield />, color: 'bg-white/5' },
+    { size: 'col-span-1 lg:col-span-4', title: 'AI Automation', desc: 'Rann biznis ou pi entèlijan.', icon: <Zap />, color: 'bg-white/5' },
+    { size: 'col-span-1 lg:col-span-8', title: 'Kind Man Strategy', desc: 'Nou pa jis kode, nou konprann valè imen ak biznis.', icon: <Users />, color: 'bg-white/5' },
+  ];
+
+  return (
+    <section id="expertise" className="py-32 bg-navy-950 px-6 md:px-10">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="mb-20">
+          <h2 className="text-gold-500 text-[10px] font-black uppercase tracking-[0.5em] mb-4">Metriz Nou</h2>
+          <h3 className="text-4xl md:text-7xl font-bold text-white tracking-tighter">Done, Sekirite <br /> & Elegans.</h3>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-24">
-          <div>
-            <h5 className="text-white font-bold mb-6">Navigation</h5>
-            <ul className="space-y-4 text-gray-500 text-sm">
-              <li><a href="#services" className="hover:text-gold-500 transition-colors">Services</a></li>
-              <li><a href="#projects" className="hover:text-gold-500 transition-colors">Projects</a></li>
-              <li><a href="#pricing" className="hover:text-gold-500 transition-colors">Pricing</a></li>
-              <li><a href="#team" className="hover:text-gold-500 transition-colors">Team</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="text-white font-bold mb-6">Legal</h5>
-            <ul className="space-y-4 text-gray-500 text-sm">
-              <li><a href="#" className="hover:text-gold-500 transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-gold-500 transition-colors">Terms</a></li>
-            </ul>
-          </div>
-          <div className="col-span-2 md:col-span-1">
-            <h5 className="text-white font-bold mb-6">Social</h5>
-            <div className="flex space-x-4 text-gray-500">
-              <a href="#" className="hover:text-gold-500 transition-colors"><Twitter size={20} /></a>
-              <a href="#" className="hover:text-gold-500 transition-colors"><Linkedin size={20} /></a>
-              <a href="#" className="hover:text-gold-500 transition-colors"><Github size={20} /></a>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {items.map((item, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ scale: 0.98 }}
+              className={`${item.size} ${item.color} border border-white/5 rounded-[40px] p-12 flex flex-col justify-between group cursor-pointer overflow-hidden relative`}
+            >
+              <div className="text-gold-500 transform group-hover:scale-110 transition-transform duration-500">
+                {React.cloneElement(item.icon, { size: 48 })}
+              </div>
+              <div>
+                <h4 className="text-2xl font-bold text-white mb-4">{item.title}</h4>
+                <p className="text-gray-400 font-light">{item.desc}</p>
+              </div>
+              <div className="absolute top-10 right-10 opacity-10 group-hover:opacity-100 transition-opacity">
+                <ArrowRight size={32} className="-rotate-45" />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const WorkSection = () => (
+  <section id="work" className="py-32 bg-navy-950 border-t border-white/5">
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+        <h3 className="text-4xl md:text-7xl font-bold text-white tracking-tighter">Pwojè ki fè <br /> diferans.</h3>
+        <button className="text-[10px] font-black uppercase tracking-widest text-gold-500 flex items-center hover:translate-x-2 transition-transform">
+          Gade tout travay nou yo <MoveRight className="ml-4" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+        {[1, 2].map((i) => (
+          <motion.div key={i} className="group cursor-pointer">
+            <div className="aspect-[16/10] rounded-[48px] overflow-hidden mb-8 border border-white/5 grayscale group-hover:grayscale-0 transition-all duration-700">
+               <img 
+                 src={i === 1 ? "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" : "https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} 
+                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                 alt="Work"
+               />
             </div>
+            <div className="flex justify-between items-start px-4">
+               <div>
+                 <span className="text-gold-500 text-[10px] font-black uppercase tracking-widest mb-2 block">0{i} / Development</span>
+                 <h4 className="text-3xl font-bold text-white group-hover:text-gold-500 transition-colors">{i === 1 ? 'E-Commerce Engine' : 'Financial Dashboard'}</h4>
+               </div>
+               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+                 <ArrowRight className="-rotate-45" />
+               </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const Footer = () => (
+  <footer className="bg-navy-950 pt-32 pb-10 border-t border-white/5 px-6 md:px-10">
+    <div className="max-w-[1400px] mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-32">
+        <div className="lg:col-span-6">
+          <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-10">AN NOU <br /> KÒMANSE.</h2>
+          <a href="mailto:hello@ciatech.agency" className="text-2xl md:text-4xl font-light text-gold-500 border-b border-gold-500/30 pb-4 hover:border-gold-500 transition-all">hello@ciatech.agency</a>
+        </div>
+        <div className="lg:col-span-6 grid grid-cols-2 md:grid-cols-3 gap-12">
+          <div>
+            <h5 className="text-gray-600 text-[10px] font-black uppercase tracking-widest mb-6">Navigasyon</h5>
+            <ul className="space-y-4 text-white text-sm font-bold">
+              <li><a href="#" className="hover:text-gold-500">Mache</a></li>
+              <li><a href="#" className="hover:text-gold-500">Ekip</a></li>
+              <li><a href="#" className="hover:text-gold-500">Vizyon</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-gray-600 text-[10px] font-black uppercase tracking-widest mb-6">Sosyal</h5>
+            <ul className="space-y-4 text-white text-sm font-bold">
+              <li><a href="#" className="hover:text-gold-500">Instagram</a></li>
+              <li><a href="#" className="hover:text-gold-500">Twitter</a></li>
+              <li><a href="#" className="hover:text-gold-500">LinkedIn</a></li>
+            </ul>
           </div>
         </div>
       </div>
-      
-      <div className="pt-10 border-t border-white/5 text-center text-gray-600 text-[10px] tracking-[0.2em] uppercase">
-        © 2026 CIATECH Agency. Designed with Excellence by Daky_400$/day.
+      <div className="flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-700 font-bold uppercase tracking-[0.3em]">
+        <p>© 2026 CIATECH AGENCY — Port-au-Prince, HT</p>
+        <p className="mt-4 md:mt-0 italic">Designed with Excellence by Daky_400$/day</p>
       </div>
     </div>
   </footer>
@@ -398,17 +267,14 @@ const Footer = () => (
 
 function App() {
   return (
-    <div className="bg-navy-950 selection:bg-gold-500 selection:text-black scroll-smooth">
+    <div className="bg-navy-950 selection:bg-gold-500 selection:text-black cursor-none">
+      <CustomCursor />
       <Navbar />
       <Hero />
-      <Services />
-      <Projects />
-      <Pricing />
-      <Team />
-      <FAQ />
-      <Contact />
+      <Marquee />
+      <BentoExpertise />
+      <WorkSection />
       <Footer />
-      <BackToTop />
     </div>
   );
 }
